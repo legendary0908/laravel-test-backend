@@ -8,32 +8,33 @@ use App\Http\Controllers\Controller;
 
 class UploadFileController extends Controller {
    public function index() {
-      return view('uploadfile');
+      return json_encode(["message" => "hello world"]);
    }
    public function showUploadFile(Request $request) {
-      $file = $request->file('image');
-   
-      //Display File Name
-      echo 'File Name: '.$file->getClientOriginalName();
-      echo '<br>';
-   
-      //Display File Extension
-      echo 'File Extension: '.$file->getClientOriginalExtension();
-      echo '<br>';
-   
-      //Display File Real Path
-      echo 'File Real Path: '.$file->getRealPath();
-      echo '<br>';
-   
-      //Display File Size
-      echo 'File Size: '.$file->getSize();
-      echo '<br>';
-   
-      //Display File Mime Type
-      echo 'File Mime Type: '.$file->getMimeType();
-   
-      //Move Uploaded File
-      $destinationPath = 'uploads';
-      $file->move($destinationPath,$file->getClientOriginalName());
+      $name = $request->filename;
+      $offset = $request->offset;
+      $data = base64_decode($request->content);
+      // $data = $request->content;
+
+      $filepath = "uploads/".$name;
+      $filemode = "r+";
+      if ( !file_exists($filepath) ) {
+         $filemode = "w";
+      }
+
+      $file = fopen("uploads/".$name, $filemode); // Open the file for reading and writing
+
+      // Move the file pointer to the specific position
+      fseek($file, $offset); // Move to the 10th byte in the file
+
+      // Write data at the specific position
+      fwrite($file, $data);
+
+      // Close the file
+      fclose($file);
+
+      return json_encode([
+         "message" => "success"
+      ]);
    }
 }
