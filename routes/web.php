@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UploadFileController;
+use App\Http\Controllers\DownloadFileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +21,6 @@ Route::get('/', function () {
 
 Route::get('/uploadfile', [UploadFileController::class, 'index']);
 Route::post('/uploadfile',[UploadFileController::class, 'showUploadFile']);
+
+Route::post('/downloadrequest', [DownloadFileController::class, 'downloadRequest']);
+Route::post('/downloadfile',[DownloadFileController::class, 'downloadFile']);
